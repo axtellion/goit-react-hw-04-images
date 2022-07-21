@@ -1,39 +1,37 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { ModalOver, ModalWindow } from './Modal.styled';
 import PropTypes from 'prop-types';
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+export const Modal = ({ img, tags, onCloseModal }) => {
+  useEffect(() => {
+    const handleKeyDown = e => {
+      console.log(e.code);
+      if (e.code === 'Escape') {
+        onCloseModal();
+      }
+    };
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+    window.addEventListener('keydown', handleKeyDown);
 
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onCloseModal();
-    }
-  };
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onCloseModal]);
 
-  handleBackdropClick = e => {
+  const handleBackdropClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.onCloseModal();
+      onCloseModal();
     }
   };
 
-  render() {
-    const { img, tags } = this.props;
-    return (
-      <ModalOver onClick={this.handleBackdropClick}>
-        <ModalWindow>
-          <img src={img} alt={tags} />
-        </ModalWindow>
-      </ModalOver>
-    );
-  }
-}
+  return (
+    <ModalOver onClick={handleBackdropClick}>
+      <ModalWindow>
+        <img src={img} alt={tags} />
+      </ModalWindow>
+    </ModalOver>
+  );
+};
 
 Modal.propTypes = {
   img: PropTypes.string.isRequired,
