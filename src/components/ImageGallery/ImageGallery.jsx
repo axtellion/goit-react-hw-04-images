@@ -6,7 +6,6 @@ export const ImageGallery = ({ items }) => {
   return (
     <List>
       {items.map(item => {
-        console.log(item);
         return (
           <ImageGalleryItem
             key={item.id}
